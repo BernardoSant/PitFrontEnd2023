@@ -1,0 +1,52 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedFood, setSelectedFood] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function buscarAlimentosRelacionados() {
+      try {
+        if (searchTerm === '') {
+          setSearchResults([]);
+          return;
+        }
+
+        const response = await api.get('/food-database/v2/parser', {
+          params: {
+            ingr: searchTerm,
+          },
+        });
+
+        setSearchResults(response.data.hints);
+      } catch (error) {
+        console.error('Erro ao buscar alimentos:', error);
+      }
+    }
+
+    buscarAlimentosRelacionados();
+  }, [searchTerm]);
+
+  const handleSearch = () => {
+    setSelectedFood(searchTerm);
+  };
+
+  const handleClear = () => {
+    setSearchTerm('');
+    setSearchResults([]);
+    setSelectedFood('');
+  };
